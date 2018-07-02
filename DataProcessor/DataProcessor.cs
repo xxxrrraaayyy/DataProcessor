@@ -2,12 +2,9 @@
 {
     using System;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using System.Collections.Generic;
     using System.IO;
     using System.Net;
-    using System.Net.Http;
     using System.Text;
-    using System.Text.RegularExpressions;
     using HtmlAgilityPack;
 
     [TestClass]
@@ -34,7 +31,7 @@
             doc.LoadHtml(html);
             HtmlNode node = doc.DocumentNode.SelectSingleNode("/html/body/center/table[4]/tr/td[1]/table[3]/tr[2]/td/table");
 
-            HtmlNodeCollection CNodes = node.ChildNodes;    //??????
+            HtmlNodeCollection CNodes = node.ChildNodes;   
 
             foreach (var item in CNodes)
             {
@@ -105,61 +102,6 @@
                 Console.WriteLine(ex.StackTrace);
             }
 
-        }
-
-        /// <summary>
-        /// ?????
-        /// </summary>
-        public static void LoginCnblogs()
-        {
-            HttpClient httpClient = new HttpClient();
-            httpClient.MaxResponseContentBufferSize = 256000;
-            httpClient.DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.143 Safari/537.36");
-            String url = "http://passport.cnblogs.com/login.aspx";
-            HttpResponseMessage response = httpClient.GetAsync(new Uri(url)).Result;
-            String result = response.Content.ReadAsStringAsync().Result;
-
-            String username = "hi_amos";
-            String password = "??";
-
-            do
-            {
-                String __EVENTVALIDATION = new Regex("id=\"__EVENTVALIDATION\" value=\"(.*?)\"").Match(result).Groups[1].Value;
-                String __VIEWSTATE = new Regex("id=\"__VIEWSTATE\" value=\"(.*?)\"").Match(result).Groups[1].Value;
-                String LBD_VCID_c_login_logincaptcha = new Regex("id=\"LBD_VCID_c_login_logincaptcha\" value=\"(.*?)\"").Match(result).Groups[1].Value;
-
-                //?????
-                url = "http://passport.cnblogs.com" + new Regex("id=\"c_login_logincaptcha_CaptchaImage\" src=\"(.*?)\"").Match(result).Groups[1].Value;
-                response = httpClient.GetAsync(new Uri(url)).Result;
-                Write("amosli.png", response.Content.ReadAsByteArrayAsync().Result);
-
-                Console.WriteLine("???????:");
-                String imgCode = "wupve";//????????,??????
-                imgCode = Console.ReadLine();
-
-                //????
-                url = "http://passport.cnblogs.com/login.aspx";
-                List<KeyValuePair<String, String>> paramList = new List<KeyValuePair<String, String>>();
-                paramList.Add(new KeyValuePair<string, string>("__EVENTTARGET", ""));
-                paramList.Add(new KeyValuePair<string, string>("__EVENTARGUMENT", ""));
-                paramList.Add(new KeyValuePair<string, string>("__VIEWSTATE", __VIEWSTATE));
-                paramList.Add(new KeyValuePair<string, string>("__EVENTVALIDATION", __EVENTVALIDATION));
-                paramList.Add(new KeyValuePair<string, string>("tbUserName", username));
-                paramList.Add(new KeyValuePair<string, string>("tbPassword", password));
-                paramList.Add(new KeyValuePair<string, string>("LBD_VCID_c_login_logincaptcha", LBD_VCID_c_login_logincaptcha));
-                paramList.Add(new KeyValuePair<string, string>("LBD_BackWorkaround_c_login_logincaptcha", "1"));
-                paramList.Add(new KeyValuePair<string, string>("CaptchaCodeTextBox", imgCode));
-                paramList.Add(new KeyValuePair<string, string>("btnLogin", "?  ?"));
-                paramList.Add(new KeyValuePair<string, string>("txtReturnUrl", "http://home.cnblogs.com/"));
-                response = httpClient.PostAsync(new Uri(url), new FormUrlEncodedContent(paramList)).Result;
-                result = response.Content.ReadAsStringAsync().Result;
-                Write("myCnblogs.html", result);
-            } while (result.Contains("?????,???????"));
-
-            Console.WriteLine("????!");
-
-            //???????
-            httpClient.Dispose();
         }
     }
 }
