@@ -6,58 +6,55 @@
     using System.Net;
     using System.Text;
     using HtmlAgilityPack;
+    using System.Threading.Tasks;
 
     [TestClass]
     public class DataProcessor
     {
         [TestMethod]
-        public void MyTestProcessor()
+        public async Task MyTestProcessorAsync()
         {
-            //LoginCnblogs();
-            //HtmlAgilityPackExample();
-            DataRetriever();
-        }
-
-        public void HtmlAgilityPackExample()
-        {
-            string mainUrl = "http://www.shuichan.cc/";
-            string xpath = "/html/body/center/table[4]/tr/td[1]/table[3]/tr[2]/td/table";
-
-            WebClient wc = new WebClient();
-            wc.BaseAddress = mainUrl;
-            wc.Encoding = Encoding.GetEncoding("gb2312");
-            HtmlDocument doc = new HtmlDocument();
-            string html = wc.DownloadString("news_list.asp?action=more&c_id=162&s_id=271");
-            doc.LoadHtml(html);
-            HtmlNode node = doc.DocumentNode.SelectSingleNode("/html/body/center/table[4]/tr/td[1]/table[3]/tr[2]/td/table");
-
-            HtmlNodeCollection CNodes = node.ChildNodes;   
-
-            foreach (var item in CNodes)
-            {
-                var obj = item.SelectSingleNode("td/a");
-                Console.WriteLine("????:" + obj.InnerText);
-                Console.WriteLine("????:" + mainUrl + obj.Attributes["href"].Value);
-                Console.WriteLine("");
-            }
-
-            Console.ReadKey();
+            await DataRetrieverAsync();
         }
 
         /// <summary>
         ///     Method to get data
         /// </summary>
-        public void DataRetriever()
+        public async Task DataRetrieverAsync()
+        {
+            var html = @"http://kaijiang.zhcw.com/zhcw/html/ssq/list_1.html";
+
+
+            HtmlWeb web = new HtmlWeb();
+
+            var htmlDoc = await web.LoadFromWebAsync(html);
+            //var htmlDoc = web.Load(html);
+
+            //var page = htmlDoc.DocumentNode.SelectSingleNode("//body/table[@class='wqhgt']/tr");
+
+            //Console.WriteLine("Node Name: " + page.Name + "\n" + page.OuterHtml);
+
+
+            //var nodes = htmlDoc.DocumentNode.SelectNodes("//body/table[@class='wqhgt']/tr");
+
+            //for(int i=2; i<nodes.Count; i++)
+            //{
+            //    Console.WriteLine("This is you dame node " + i);
+            //    Console.WriteLine(nodes[i].OuterHtml);
+            //}
+
+            var nodes = htmlDoc.DocumentNode.SelectNodes("//body/table[@class='wqhgt']/tr");
+
+            Console.WriteLine(nodes[4].SelectSingleNode("//em").OuterHtml);
+        }
+
+        public async void LoadWeb(string url)
         {
             var html = @"http://kaijiang.zhcw.com/zhcw/html/ssq/list_1.html";
 
             HtmlWeb web = new HtmlWeb();
 
-            var htmlDoc = web.Load(html);
-
-            var node = htmlDoc.DocumentNode.SelectSingleNode("//body/table[@class='wqhgt']");
-
-            Console.WriteLine("Node Name: " + node.Name + "\n" + node.OuterHtml);
+            var htmlDoc = await web.LoadFromWebAsync(html);
         }
 
 
@@ -102,6 +99,32 @@
                 Console.WriteLine(ex.StackTrace);
             }
 
+        }
+
+        public void HtmlAgilityPackExample()
+        {
+            string mainUrl = "http://www.shuichan.cc/";
+            string xpath = "/html/body/center/table[4]/tr/td[1]/table[3]/tr[2]/td/table";
+
+            WebClient wc = new WebClient();
+            wc.BaseAddress = mainUrl;
+            wc.Encoding = Encoding.GetEncoding("gb2312");
+            HtmlDocument doc = new HtmlDocument();
+            string html = wc.DownloadString("news_list.asp?action=more&c_id=162&s_id=271");
+            doc.LoadHtml(html);
+            HtmlNode node = doc.DocumentNode.SelectSingleNode("/html/body/center/table[4]/tr/td[1]/table[3]/tr[2]/td/table");
+
+            HtmlNodeCollection CNodes = node.ChildNodes;
+
+            foreach (var item in CNodes)
+            {
+                var obj = item.SelectSingleNode("td/a");
+                Console.WriteLine("????:" + obj.InnerText);
+                Console.WriteLine("????:" + mainUrl + obj.Attributes["href"].Value);
+                Console.WriteLine("");
+            }
+
+            Console.ReadKey();
         }
     }
 }
