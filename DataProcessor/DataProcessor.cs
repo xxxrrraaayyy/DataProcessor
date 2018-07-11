@@ -45,7 +45,18 @@
 
             var nodes = htmlDoc.DocumentNode.SelectNodes("//body/table[@class='wqhgt']/tr");
 
-            Console.WriteLine(nodes[4].SelectSingleNode("//em").OuterHtml);
+            Console.WriteLine(nodes[4].SelectNodes(".//td")[0].InnerHtml);
+            Console.WriteLine(nodes[4].SelectNodes(".//td")[1].InnerHtml);
+            Console.WriteLine(nodes[4].SelectNodes(".//td")[2].InnerHtml);
+            Console.WriteLine(nodes[4].SelectNodes(".//td")[3].InnerHtml);
+            Console.WriteLine(nodes[4].SelectNodes(".//td")[4].InnerHtml);
+            Console.WriteLine(nodes[4].SelectNodes(".//td")[5].InnerHtml);
+            var numbers = nodes[4].SelectNodes(".//em");
+            foreach(var n in numbers)
+            {
+                Console.WriteLine(n.InnerHtml);
+            }
+
         }
 
         public async void LoadWeb(string url)
