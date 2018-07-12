@@ -32,31 +32,28 @@
 
             //var page = htmlDoc.DocumentNode.SelectSingleNode("//body/table[@class='wqhgt']/tr");
 
-            //Console.WriteLine("Node Name: " + page.Name + "\n" + page.OuterHtml);
-
-
-            //var nodes = htmlDoc.DocumentNode.SelectNodes("//body/table[@class='wqhgt']/tr");
-
-            //for(int i=2; i<nodes.Count; i++)
-            //{
-            //    Console.WriteLine("This is you dame node " + i);
-            //    Console.WriteLine(nodes[i].OuterHtml);
-            //}
-
             var nodes = htmlDoc.DocumentNode.SelectNodes("//body/table[@class='wqhgt']/tr");
 
-            Console.WriteLine(nodes[4].SelectNodes(".//td")[0].InnerHtml);
-            Console.WriteLine(nodes[4].SelectNodes(".//td")[1].InnerHtml);
-            Console.WriteLine(nodes[4].SelectNodes(".//td")[2].InnerHtml);
-            Console.WriteLine(nodes[4].SelectNodes(".//td")[3].InnerHtml);
-            Console.WriteLine(nodes[4].SelectNodes(".//td")[4].InnerHtml);
-            Console.WriteLine(nodes[4].SelectNodes(".//td")[5].InnerHtml);
-            var numbers = nodes[4].SelectNodes(".//em");
-            foreach(var n in numbers)
-            {
-                Console.WriteLine(n.InnerHtml);
-            }
+            //Console.WriteLine(nodes[4].SelectNodes(".//td")[0].InnerHtml);
+            //Console.WriteLine(nodes[4].SelectNodes(".//td")[1].InnerHtml);
+            //Console.WriteLine(nodes[4].SelectNodes(".//td")[2].InnerHtml);
+            //Console.WriteLine(nodes[4].SelectNodes(".//td")[3].InnerHtml);
+            //Console.WriteLine(nodes[4].SelectNodes(".//td")[4].InnerHtml);
+            //Console.WriteLine(nodes[4].SelectNodes(".//td")[5].InnerHtml);
+            //var numbers = nodes[4].SelectNodes(".//em");
+            //foreach(var n in numbers)
+            //{
+            //    Console.WriteLine(n.InnerHtml);
+            //}
+            Console.WriteLine(nodes[nodes.Count-1].SelectSingleNode(".//strong[1]").InnerHtml);
+            Console.WriteLine(nodes[nodes.Count-1].SelectSingleNode(".//strong[7]").InnerHtml);
 
+            StringBuilder csv = new StringBuilder();
+            csv.AppendLine(nodes[nodes.Count - 1].SelectSingleNode(".//strong[7]").InnerHtml);
+            csv.AppendLine(nodes[nodes.Count - 1].SelectSingleNode(".//strong[1]").InnerHtml);
+            File.WriteAllText(dir, csv.ToString());
+            // To append more lines to the csv file
+            //File.AppendAllText(dir, csv.ToString());
         }
 
         public async void LoadWeb(string url)
@@ -69,7 +66,7 @@
         }
 
 
-        private static String dir = @"C:\work\";
+        private static String dir = @"F:\data.csv";
 
         /// <summary>
         /// ??????
