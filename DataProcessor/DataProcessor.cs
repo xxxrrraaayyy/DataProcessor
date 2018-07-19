@@ -14,7 +14,30 @@
         [TestMethod]
         public async Task MyTestProcessorAsync()
         {
-            await DataRetrieverAsync();
+            //await DataRetrieverAsync();
+            await GetPages();
+            Console.WriteLine(pages);
+        }
+
+        int pages = 0;
+
+        HtmlDocument webContent;
+
+        /// <summary>
+        ///     Async method to load the first page and return the number of total pages
+        /// </summary>
+        /// <returns></returns>
+        public async Task GetPages()
+        {
+            var html = @"http://kaijiang.zhcw.com/zhcw/html/ssq/list_1.html";
+
+            HtmlWeb web = new HtmlWeb();
+
+            var htmlDoc = await web.LoadFromWebAsync(html);
+
+            var nodes = htmlDoc.DocumentNode.SelectNodes("//body/table[@class='wqhgt']/tr");
+
+            pages = int.Parse(nodes[nodes.Count - 1].SelectSingleNode(".//strong[1]").InnerHtml);
         }
 
         /// <summary>
