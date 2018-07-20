@@ -3,12 +3,10 @@
     using System;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System.IO;
-    using System.Net;
     using System.Text;
     using HtmlAgilityPack;
     using System.Threading.Tasks;
     using System.Collections.Generic;
-    using System.Collections;
 
     [TestClass]
     public class DataProcessor
@@ -17,17 +15,15 @@
         public async Task MyTestProcessorAsync()
         {
             //await DataRetrieverAsync();
-            //await GetPages();
-            //Console.WriteLine(pages);
             await GetPages();
             await LoadPages();
         }
 
-        int pages = 0;
+        private int _pages;
 
-        HtmlDocument webContent;
+        private HtmlDocument _webContent;
 
-        private static String dir = @"F:\data.csv";
+        private const string DIR = @"C:\xuexi\data.csv";
 
         /// <summary>
         ///     Async method to load the first page and return the number of total pages
@@ -43,12 +39,12 @@
 
             var nodes = htmlDoc.DocumentNode.SelectNodes("//body/table[@class='wqhgt']/tr");
 
-            pages = int.Parse(nodes[nodes.Count - 1].SelectSingleNode(".//strong[1]").InnerHtml);
+            _pages = int.Parse(nodes[nodes.Count - 1].SelectSingleNode(".//strong[1]").InnerHtml);
         }
 
         public async Task LoadPages()
         {
-            for(int p = pages; p>0; p--)
+            for(int p = _pages; p>0; p--)
             {
                 StringBuilder sb = new StringBuilder();
                 sb.Append("http://kaijiang.zhcw.com/zhcw/html/ssq/list_").Append(p).Append(".html");
@@ -60,8 +56,8 @@
         public async Task LoadAndProcessContents(string url)
         {
             HtmlWeb web = new HtmlWeb();
-            webContent = await web.LoadFromWebAsync(url);
-            var nodes = webContent.DocumentNode.SelectNodes("//body/table[@class='wqhgt']/tr");
+            _webContent = await web.LoadFromWebAsync(url);
+            var nodes = _webContent.DocumentNode.SelectNodes("//body/table[@class='wqhgt']/tr");
             ProcessContents(nodes);
         }
 
@@ -92,8 +88,8 @@
         {
             try
             {
-                File.AppendAllLines(dir, output);
-                File.AppendAllLines(dir, new string[0]);
+                File.AppendAllLines(DIR, output);
+                File.AppendAllLines(DIR, new string[0]);
             }
             catch (Exception ex)
             {
@@ -143,15 +139,5 @@
             // To append more lines to the csv file
             //File.AppendAllText(dir, csv.ToString());
         }
-
-        public async void LoadWeb(string url)
-        {
-            var html = @"http://kaijiang.zhcw.com/zhcw/html/ssq/list_1.html";
-
-            HtmlWeb web = new HtmlWeb();
-
-            var htmlDoc = await web.LoadFromWebAsync(html);
-        }
-
     }
 }
