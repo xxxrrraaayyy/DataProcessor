@@ -111,7 +111,9 @@
                 4,4,3,1,4,1,2,6,4,4,  1,2};//,6,4,3,6,2,5,5,5
 
             var result = new DiscreteMarkov(data, 6, 5);
-
+            foreach (var i in result.PredictValue) {
+                Console.WriteLine(i);
+            }
         }
 
         /// <summary>
